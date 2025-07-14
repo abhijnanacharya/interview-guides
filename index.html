@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interval Problems: Sorting and Priority Queue Approaches</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.5;
+            background: #f8f9fa;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 100vw;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .summary-section {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .key-insight {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fab1a0 100%);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 5px solid #e17055;
+        }
+        
+        .problems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .problem-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #667eea;
+            transition: transform 0.3s ease;
+        }
+        
+        .problem-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .approach-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: white;
+        }
+        
+        .sorting-badge { background: #e74c3c; }
+        .priority-badge { background: #9b59b6; }
+        .event-badge { background: #f39c12; }
+        
+        .problem-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+        
+        .problem-description {
+            margin-bottom: 15px;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+        
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
+            line-height: 1.4;
+            overflow-x: auto;
+            white-space: pre;
+            tab-size: 4;
+        }
+        
+        .complexity-info {
+            background: #e8f5e8;
+            border-left: 4px solid #27ae60;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+        }
+        
+        .decision-framework {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            border: 2px solid #667eea;
+        }
+        
+        .framework-title {
+            font-size: 1.5em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .framework-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .framework-item h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .summary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9em;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .summary-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 10px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .summary-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .summary-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .summary-table tr:hover {
+            background: #e3f2fd;
+        }
+        
+        .compact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .compact-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+        
+        .compact-card h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .compact-card ul {
+            margin-left: 20px;
+        }
+        
+        .compact-card li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+        
+        .master-strategy {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 40px 0;
+            text-align: center;
+        }
+        
+        .master-strategy h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .strategy-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .strategy-point {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 8px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 1200px) {
+            .problems-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+            .problem-card {
+                page-break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interval Problems in Competitive Programming</h1>
+            <p class="subtitle">A Comprehensive Guide to Sorting and Priority Queue Approaches</p>
+        </div>
+
+        <div class="content">
+            <div class="summary-section">
+                <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.8em;">Executive Summary</h2>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">This report covers the essential interval-based problems in competitive programming that require either sorting or priority queue approaches. These problems are fundamental in algorithm design and appear frequently in coding interviews and contests.</p>
+                
+                <div class="key-insight">
+                    <strong>🎯 Key Insight:</strong> The choice between sorting and priority queue depends on whether you need to process intervals in a predetermined order (sorting) or maintain dynamic information about active intervals (priority queue).
+                </div>
+            </div>
+
+            <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 1.8em; text-align: center;">Problem Categories</h2>
+
+            <div class="problems-grid">
+                <div class="problem-card">
+                    <div class="approach-badge sorting-badge">SORTING APPROACH</div>
+                    <div class="problem-title">1. Interval Merging</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Given a collection of intervals, merge overlapping intervals.<br>
+                        <strong>Strategy:</strong> Sort by start time, then iterate and merge overlapping intervals.
+                    </div>
+                    <div class="code-block">vector&lt;vector&lt;int&gt;&gt; mergeIntervals(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+    sort(intervals.begin(), intervals.end());
+    vector&lt;vector&lt;int&gt;&gt; merged;
+    merged.push_back(intervals[0]);
+    
+    for (int i = 1; i &lt; intervals.size(); i++) {
+        if (intervals[i][0] &lt;= merged.back()[1]) {
+            merged.back()[1] = max(merged.back()[1], intervals[i][1]);
+        } else {
+            merged.push_back(intervals[i]);
+        }
+    }
+    return merged;
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n log n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(1)
+                    </div>
+                </div>
+
+                <div class="problem-card">
+                    <div class="approach-badge sorting-badge">SORTING APPROACH</div>
+                    <div class="problem-title">2. Activity Selection</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Select maximum number of non-overlapping intervals.<br>
+                        <strong>Strategy:</strong> Sort by end time, greedily select intervals that don't overlap.
+                    </div>
+                    <div class="code-block">int maxNonOverlapping(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+    sort(intervals.begin(), intervals.end(), [](const vector&lt;int&gt;&amp; a, const vector&lt;int&gt;&amp; b) {
+        return a[1] &lt; b[1];
+    });
+    
+    int count = 1;
+    int lastEnd = intervals[0][1];
+    
+    for (int i = 1; i &lt; intervals.size(); i++) {
+        if (intervals[i][0] &gt;= lastEnd) {
+            count++;
+            lastEnd = intervals[i][1];
+        }
+    }
+    return count;
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n log n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(1)
+                    </div>
+                </div>
+
+                <div class="problem-card">
+                    <div class="approach-badge priority-badge">PRIORITY QUEUE</div>
+                    <div class="problem-title">3. Meeting Rooms</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Find minimum number of meeting rooms needed.<br>
+                        <strong>Strategy:</strong> Sort by start time, use min-heap to track room end times.
+                    </div>
+                    <div class="code-block">int minMeetingRooms(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+    sort(intervals.begin(), intervals.end());
+    priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt; minHeap;
+    
+    for (auto&amp; interval : intervals) {
+        if (!minHeap.empty() &amp;&amp; minHeap.top() &lt;= interval[0]) {
+            minHeap.pop();
+        }
+        minHeap.push(interval[1]);
+    }
+    
+    return minHeap.size();
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n log n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(n)
+                    </div>
+                </div>
+
+                <div class="problem-card">
+                    <div class="approach-badge event-badge">EVENT-BASED</div>
+                    <div class="problem-title">4. Max Overlapping</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Find maximum number of intervals that overlap at any point.<br>
+                        <strong>Strategy:</strong> Convert intervals to start/end events, sort and sweep.
+                    </div>
+                    <div class="code-block">int maxOverlapping(vector&lt;vector&lt;int&gt;&gt;&amp; intervals) {
+    vector&lt;pair&lt;int, int&gt;&gt; events;
+    
+    for (auto&amp; interval : intervals) {
+        events.push_back({interval[0], 1});    // Start event
+        events.push_back({interval[1], -1});   // End event
+    }
+    
+    sort(events.begin(), events.end());
+    
+    int maxOverlap = 0, currentOverlap = 0;
+    for (auto&amp; event : events) {
+        currentOverlap += event.second;
+        maxOverlap = max(maxOverlap, currentOverlap);
+    }
+    
+    return maxOverlap;
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n log n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(n)
+                    </div>
+                </div>
+
+                <div class="problem-card">
+                    <div class="approach-badge priority-badge">PRIORITY QUEUE</div>
+                    <div class="problem-title">5. Skyline Problem</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Given buildings with heights, find the skyline silhouette.<br>
+                        <strong>Strategy:</strong> Use events for building start/end, maintain active heights.
+                    </div>
+                    <div class="code-block">vector&lt;vector&lt;int&gt;&gt; getSkyline(vector&lt;vector&lt;int&gt;&gt;&amp; buildings) {
+    vector&lt;pair&lt;int, int&gt;&gt; events;
+    
+    for (auto&amp; building : buildings) {
+        events.push_back({building[0], -building[2]});
+        events.push_back({building[1], building[2]});
+    }
+    
+    sort(events.begin(), events.end());
+    
+    vector&lt;vector&lt;int&gt;&gt; result;
+    multiset&lt;int&gt; heights = {0};
+    
+    for (auto&amp; event : events) {
+        int pos = event.first;
+        int heightChange = event.second;
+        
+        if (heightChange &lt; 0) {
+            heights.insert(-heightChange);
+        } else {
+            heights.erase(heights.find(heightChange));
+        }
+        
+        int maxHeight = *heights.rbegin();
+        if (result.empty() || result.back()[1] != maxHeight) {
+            result.push_back({pos, maxHeight});
+        }
+    }
+    
+    return result;
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n log n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(n)
+                    </div>
+                </div>
+
+                <div class="problem-card">
+                    <div class="approach-badge sorting-badge">SORTING APPROACH</div>
+                    <div class="problem-title">6. Interval Insertion</div>
+                    <div class="problem-description">
+                        <strong>Problem:</strong> Insert a new interval into sorted non-overlapping intervals.<br>
+                        <strong>Strategy:</strong> Find insertion position, merge overlapping intervals.
+                    </div>
+                    <div class="code-block">vector&lt;vector&lt;int&gt;&gt; insertInterval(vector&lt;vector&lt;int&gt;&gt;&amp; intervals, vector&lt;int&gt;&amp; newInterval) {
+    vector&lt;vector&lt;int&gt;&gt; result;
+    int i = 0;
+    
+    // Add intervals before new interval
+    while (i &lt; intervals.size() &amp;&amp; intervals[i][1] &lt; newInterval[0]) {
+        result.push_back(intervals[i]);
+        i++;
+    }
+    
+    // Merge overlapping intervals
+    while (i &lt; intervals.size() &amp;&amp; intervals[i][0] &lt;= newInterval[1]) {
+        newInterval[0] = min(newInterval[0], intervals[i][0]);
+        newInterval[1] = max(newInterval[1], intervals[i][1]);
+        i++;
+    }
+    result.push_back(newInterval);
+    
+    // Add remaining intervals
+    while (i &lt; intervals.size()) {
+        result.push_back(intervals[i]);
+        i++;
+    }
+    
+    return result;
+}</div>
+                    <div class="complexity-info">
+                        <strong>Time:</strong> O(n) &nbsp;&nbsp;&nbsp; <strong>Space:</strong> O(1)
+                    </div>
+                </div>
+            </div>
+
+            <div class="decision-framework">
+                <h3 class="framework-title">🎯 Decision Framework</h3>
+                <div class="framework-grid">
+                    <div class="framework-item">
+                        <h4>Sort by START time</h4>
+                        <p><strong>When:</strong> Merging intervals, processing chronologically</p>
+                        <p><strong>Examples:</strong> Merge Intervals, Insert Interval</p>
+                    </div>
+                    <div class="framework-item">
+                        <h4>Sort by END time</h4>
+                        <p><strong>When:</strong> Greedy selection problems</p>
+                        <p><strong>Examples:</strong> Activity Selection, Point Coverage</p>
+                    </div>
+                    <div class="framework-item">
+                        <h4>Priority Queue</h4>
+                        <p><strong>When:</strong> Dynamic tracking of max/min</p>
+                        <p><strong>Examples:</strong> Meeting Rooms, CPU Scheduling</p>
+                    </div>
+                    <div class="framework-item">
+                        <h4>Event-based</h4>
+                        <p><strong>When:</strong> Counting overlaps, state changes</p>
+                        <p><strong>Examples:</strong> Max Overlapping, Skyline</p>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.8em; text-align: center;">Complete Problem Summary</h2>
+            
+            <table class="summary-table">
+                <tr>
+                    <th>Problem Type</th>
+                    <th>Approach</th>
+                    <th>Time</th>
+                    <th>Space</th>
+                    <th>Key Insight</th>
+                </tr>
+                <tr><td>Interval Merging</td><td>Sort by start</td><td>O(n log n)</td><td>O(1)</td><td>Process chronologically</td></tr>
+                <tr><td>Activity Selection</td><td>Sort by end</td><td>O(n log n)</td><td>O(1)</td><td>Greedy on earliest ending</td></tr>
+                <tr><td>Meeting Rooms</td><td>Sort + Min Heap</td><td>O(n log n)</td><td>O(n)</td><td>Track room availability</td></tr>
+                <tr><td>Max Overlapping</td><td>Event-based</td><td>O(n log n)</td><td>O(n)</td><td>Timeline sweep</td></tr>
+                <tr><td>Skyline Problem</td><td>Events + Multiset</td><td>O(n log n)</td><td>O(n)</td><td>Track active heights</td></tr>
+                <tr><td>Interval Insertion</td><td>Sort existing</td><td>O(n)</td><td>O(1)</td><td>Find insertion position</td></tr>
+                <tr><td>Point Coverage</td><td>Sort by end</td><td>O(n log n)</td><td>O(1)</td><td>Greedy point placement</td></tr>
+                <tr><td>Interval Intersection</td><td>Two pointers</td><td>O(n + m)</td><td>O(1)</td><td>Merge-like process</td></tr>
+            </table>
+
+            <div class="master-strategy">
+                <h3>🚀 Master Strategy</h3>
+                <p style="font-size: 1.1em; margin-bottom: 20px;">The key to solving interval problems is identifying what you need to track:</p>
+                <div class="strategy-points">
+                    <div class="strategy-point">
+                        <strong>Processing order:</strong><br>Sort by start or end time
+                    </div>
+                    <div class="strategy-point">
+                        <strong>Active intervals:</strong><br>Use priority queue or multiset
+                    </div>
+                    <div class="strategy-point">
+                        <strong>State changes:</strong><br>Convert to events and sweep
+                    </div>
+                    <div class="strategy-point">
+                        <strong>Overlaps:</strong><br>Two pointers or event-based counting
+                    </div>
+                </div>
+            </div>
+
+            <div class="compact-grid">
+                <div class="compact-card">
+                    <h4>🎯 LeetCode Practice Problems</h4>
+                    <ul>
+                        <li><strong>Easy:</strong> 56. Merge Intervals</li>
+                        <li><strong>Medium:</strong> 253. Meeting Rooms II</li>
+                        <li><strong>Medium:</strong> 435. Non-overlapping Intervals</li>
+                        <li><strong>Medium:</strong> 57. Insert Interval</li>
+                        <li><strong>Medium:</strong> 986. Interval List Intersections</li>
+                        <li><strong>Hard:</strong> 218. The Skyline Problem</li>
+                        <li><strong>Hard:</strong> 621. Task Scheduler</li>
+                        <li><strong>Hard:</strong> 759. Employee Free Time</li>
+                    </ul>
+                </div>
+                
+                <div class="compact-card">
+                    <h4>📊 Additional Problem Types</h4>
+                    <ul>
+                        <li><strong>CPU Scheduling:</strong> Task frequency management</li>
+                        <li><strong>Employee Free Time:</strong> Merge schedules, find gaps</li>
+                        <li><strong>Point Coverage:</strong> Minimum points to cover intervals</li>
+                        <li><strong>Interval Intersection:</strong> Find overlapping regions</li>
+                        <li><strong>Range Module:</strong> Dynamic interval tracking</li>
+                        <li><strong>Calendar Booking:</strong> Event scheduling conflicts</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <h3>Happy Coding! 🚀</h3>
+            <p>Master these patterns and you'll be ready for any interval problem!</p>
+        </div>
+    </div>
+</body>
+</html>
